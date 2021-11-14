@@ -1,2 +1,2 @@
-# one-question-per-day
-Learn every day to improve yourself
+# 每日一题
+努力学习，提升自己
