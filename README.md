@@ -9,4 +9,6 @@
 
 ### 2021-11-15
 
+1. [实现instanceof](https://github.com/myadmin/one-question-per-day/blob/main/JavaScript/instanceof.md)
+
 ### 2021-11-16
