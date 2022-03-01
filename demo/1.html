@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防抖</title>
+</head>
+
+<body>
+    <input placeholder="Enter some text" name="name" />
+    <p id="log"></p>
+    <script>
+        const input = document.querySelector('input');
+        const log = document.getElementById('log');
+
+        input.addEventListener('keypress', debounce(updateValue, 300));
+
+        function updateValue(e) {
+            log.textContent = e.target.value;
+            console.log('e', e.target.value);
+        }
+
+        // 函数防抖：主要用于优化体验，降低相关事件的调用次数
+        function debounce(fn, delay) {
+            let timer;
+            return function () {
+                let _this = this;
+                let args = arguments;
+                if (timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(function () {
+                    fn.apply(_this, args);
+                }, delay);
+            }
+        }
+
+        // https://segmentfault.com/a/1190000018445196
+    </script>
+</body>
+
+</html>

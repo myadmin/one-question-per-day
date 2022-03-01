@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实现 Object 相关方法</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * Object.assign(target, ...others)
+         */
+        Object.MyAssign = function (target, ...source) {
+            // console.log('target', target);
+            if (target === null || target === undefined) {
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+            let ret = Object(target);
+            source.forEach((obj) => {
+                if (obj !== null && obj !== undefined) {
+                    for (let key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            ret[key] = obj[key];
+                        }
+                    }
+                }
+            });
+            return ret;
+        }
+
+        const obj = Object.MyAssign({}, { a: 1, b: 2 }, { c: 3 });
+        console.log('obj', obj);
+        const arr = Object.MyAssign([], [1, 2, 3], [4, 5, 6]);
+        console.log('arr', arr);
+    </script>
+</body>
+
+</html>

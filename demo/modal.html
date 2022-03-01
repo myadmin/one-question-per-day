@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>单例模式弹框</title>
+    <style>
+      #modal {
+        height: 200px;
+        width: 200px;
+        line-height: 200px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid black;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="open">打开弹框</button>
+    <button id="close">关闭弹框</button>
+    <script>
+      const Modal = (function () {
+        let modal = null;
+        return function () {
+          if (!modal) {
+            modal = document.createElement("div");
+            modal.innerHTML = "我是一个全局唯一的modal";
+            modal.id = "modal";
+            modal.style.display = "none";
+            document.body.appendChild(modal);
+          }
+          return modal;
+        };
+      })();
+
+      //   document.getElementById("open").addEventListener("click", function () {
+      //     const modal = new Modal();
+      //     modal.style.display = "block";
+      //   });
+
+      //   document.getElementById("close").addEventListener("click", function () {
+      //     const modal = new Modal();
+      //     if (modal) {
+      //       modal.style.display = "none";
+      //     }
+      //   });
+
+      class Modal2 {
+        static getInstance() {
+          if (!Modal2.instance) {
+            Modal2.instance = new Modal2();
+            Modal2.instance.createModal();
+          }
+          return Modal2.instance;
+        }
+        createModal() {
+          this.div = document.createElement("div");
+          this.div.innerHTML = "我是一个全局唯一的modal";
+          this.div.id = "modal";
+          this.div.style.display = "none";
+          document.body.appendChild(this.div);
+        }
+        open() {
+          this.div.style.display = "block";
+        }
+        close() {
+          this.div.style.display = "none";
+        }
+      }
+
+      document.getElementById("open").addEventListener("click", function () {
+        const modal = Modal2.getInstance();
+        const modal2 = Modal2.getInstance();
+        console.log(modal === modal2);
+        modal.open();
+      });
+
+      document.getElementById("close").addEventListener("click", function () {
+        const modal = Modal2.getInstance();
+        if (modal) {
+          modal.close();
+        }
+      });
+    </script>
+  </body>
+</html>

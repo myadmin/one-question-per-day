@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply、Bind、Call的区别及实现</title>
+    <style>
+        pre,
+        code {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <pre>
+    1.apply()方法调用一个具有给定this值的函数，以及以一个数组（或类数组对象）的形式提供的参数。
+    2.call()方法的作用和 apply() 方法类似，区别就是call()方法接受的是参数列表，而apply()方法接受的是一个参数数组。
+    3.bind()方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
+    </pre>
+    <code>
+    const a = {};
+
+    const b = a.x;
+        
+    b.apply(a, [1, 2, 3]);
+
+    b.call(a, 1, 2, 3);
+
+    b.bind(a, 1, 2, 3)();
+    </code>
+    <script>
+        const a = {
+            name: 'Cind',
+            fn: function (a, b) {
+                console.log(a + b);
+            }
+        };
+
+        const b = a.fn;
+        b.apply(a, [1, 2]);
+
+        b.call(a, 3, 4);
+
+        b.bind(a, 5, 6)();
+    </script>
+    <script>
+        /*
+         * title: 手写call，使用一个指定的 this 值和一个或多个参数来调用一个函数
+         * 1.this 可能传入 null
+         * 2.传入不固定个数的参数
+         * 3.函数可能有返回值
+         */
+        Function.prototype.myCall = function (context) {
+            context = context || window;
+            context.fn = this;
+
+            let args = [];
+            for (let i = 1, len = arguments.length; i < len; i++) {
+                args.push(`arguments[${i}]`);
+            }
+
+            const result = eval(`context.fn(${args})`);
+
+            delete context.fn;
+            return result;
+        }
+
+        function mySymbol(obj) {
+            let unique = (Math.random() + new Date().getTime()).toString(32).slice(0, 8);
+            if (obj.hasOwnProperty(unique)) {
+                return mySymbol(obj);
+            } else {
+                return unique;
+            }
+        }
+
+        Function.prototype.MyCall = function (context) {
+            context = context || window;
+            const fn = mySymbol(context);
+            context[fn] = this;
+            const args = [...arguments].slice(1);
+            context[fn](...args);
+            delete context[fn];
+        }
+
+        const c = {
+            name: 'Mary',
+            fn: function (a, b) {
+                console.log(a + b);
+            }
+        };
+
+        // const d = c.fn;
+        // d.myCall(c, 1, 3);
+
+        const Person = {
+            name: 'Mar',
+            say: function (age) {
+                console.log(this);
+                console.log(`我叫${this.name}，我今年${age}岁`);
+            },
+            hi(name) {
+                console.log('hi', this);
+            }
+        }
+
+        Person1 = {
+            name: 'Tom1'
+        };
+
+        // Person.say(12);
+        // Person.say.MyCall(Person1, 20);
+        // Person.hi();
+        // Person.hi.MyCall(Person1);
+
+        Function.prototype.MyApply = function (context) {
+            // 如果没有传值或传的值为空对象
+            if (typeof context === "undefined" || context === null) {
+                context = window;
+            }
+            const fn = mySymbol(context);
+            context[fn] = this;
+            const args = [...arguments].splice(1);
+            context[fn](args);
+            delete context[fn];
+        }
+
+        // Person.say(18);
+        // Person.say.MyApply(Person1, [11]);
+
+        Function.prototype.MyBind = function (context) {
+            const self = this;
+            const args = [...arguments].slice(1);
+            return function () {
+                const newArg = [...arguments];
+                return self.apply(context, args.concat(newArg));
+            }
+        }
+
+        // const fn = Person.say.bind(Person1);
+        // fn();
+        // fn(12);
+
+        Function.prototype.myCall2 = function (thisArg, ...args) {
+            const fn = Symbol('fn');
+            thisArg = thisArg || window;
+            thisArg[fn] = this;
+            const result = thisArg[fn](...args);
+            delete thisArg[fn];
+            return result;
+        };
+
+        function foo() {
+            console.log(this.name);
+            console.log(...arguments);
+        }
+
+        const obj = { name: '写代码像蔡徐坤' };
+        foo.myCall2(obj, 1, 2);
+
+        Function.prototype.MyApply2 = function (thisArg, args) {
+            const fn = Symbol('fn');
+            thisArg = thisArg || window;
+            thisArg[fn] = this;
+            const result = thisArg[fn](...args);
+            delete thisArg[fn];
+            return result;
+        };
+
+        foo.MyApply2(obj, [1, 2, 3, 4]);
+
+        Function.prototype.MyBind2 = function (thisArg, ...args) {
+            const self = this;
+            const fbound = function () {
+                self.apply(this instanceof self ? this : thisArg, args.concat(Array.prototype.slice.call(arguments)))
+            };
+            fbound.prototype = Object.create(self.prototype);
+            return fbound;
+        };
+
+        foo.MyBind2(obj, 1, 2, '3', 4)();
+    </script>
+</body>
+
+</html>

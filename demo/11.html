@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟DOM</title>
+    <style>
+        #app {
+            width: 100%;
+            height: 300px;
+            background-color: red;
+            display: flex;
+        }
+
+        #app span {
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            margin-right: 10px;
+        }
+
+        #app span a {
+            display: flex;
+            font-size: 24px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const data = {
+            tag: 'DIV',
+            attrs: { id: 'app' },
+            children: [{
+                tag: 'SPAN', children: [
+                    { tag: 'A', attrs: { text: '123' }, children: [] }]
+            },
+            {
+                tag: 'SPAN', children: [
+                    { tag: 'A', attrs: { text: '456' }, children: [] },
+                    { tag: 'A', attrs: { text: '789' }, children: [] },
+                ]
+            }]
+        };
+
+        const render = (vnode) => {
+            if (typeof vnode === 'number') {
+                vnode = String(vnode);
+            }
+
+            if (typeof vnode === 'string') {
+                return document.createTextNode(vnode);
+            }
+
+            const dom = document.createElement(vnode.tag);
+            if (vnode.attrs) {
+                Object.keys(vnode.attrs).forEach(key => {
+                    const value = vnode.attrs[key];
+                    if (key === 'text') {
+                        dom.innerHTML = value;
+                    } else {
+                        dom.setAttribute(key, value);
+                    }
+                });
+            }
+
+            vnode.children.forEach(child => dom.appendChild(render(child)));
+            return dom;
+        }
+
+        const _data = render(data);
+        document.body.appendChild(_data);
+    </script>
+</body>
+
+</html>

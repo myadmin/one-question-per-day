@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄生组合式继承</title>
+</head>
+
+<body>
+    <script>
+        function Person(name) {
+            this.name = name;
+            this.say = () => {
+                console.log(this.name + ' say');
+            }
+        }
+
+        Person.prototype.play = function () {
+            // console.log(333);
+            console.log(this.name + ' play');
+        }
+
+        function Children(name) {
+            Person.call(this);
+            this.name = name;
+        }
+
+        Children.prototype = Object.create(Person.prototype);
+        Children.prototype.constructor = Children;
+
+        const person = new Person('123');
+        person.say();
+
+        const children = new Children('children');
+        children.say();
+        // Children.play();
+        children.play();
+
+        console.log(Person instanceof Object)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一维数组转二维数组</title>
+</head>
+
+<body>
+    <script>
+        const arrayToMatrix = (arr, len) => {
+            const result = [];
+            arr.forEach((element, i) => {
+                result.push(arr.splice(0, len))
+            });
+            console.log(result)
+        }
+        arrayToMatrix([1, 2, 3, 4, 5, 6, 7], 2);
+
+        const chunk = (arr, size) => {
+            return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+                arr.slice(i * size, i * size + size)
+            )
+        }
+
+        console.log(chunk([1, 2, 3, 4, 5, 6, 7], 2));
+    </script>
+</body>
+
+</html>

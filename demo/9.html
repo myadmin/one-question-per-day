@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forEach and map</title>
+</head>
+
+<body>
+    <script>
+        let arr = [1, 2, 3, 4, 5];
+
+        arr.forEach(item => {
+            item *= 2;
+            return item;
+        });
+
+        // 数组对象
+        const b = [{ a: 1, b: 2 }, { a: 4, b: 3 }];
+        b.forEach(item => item.a = 10);
+        console.log('b', b);
+    </script>
+</body>
+
+</html>

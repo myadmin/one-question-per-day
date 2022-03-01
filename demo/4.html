@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实现New</title>
+</head>
+
+<body>
+    <script>
+        function objectFactory() {
+            const obj = new Object();
+            // console.log('arguments', arguments);
+            Constructor = [].shift.call(arguments);
+            // console.log('Constructor', Constructor);
+            obj.__proto__ = Constructor.prototype;
+            const ret = Constructor.apply(obj, arguments);
+
+            return typeof ret === 'object' ? ret || obj : obj;
+        }
+
+        function Person(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        const person = ({ name, age }) => {
+            // console.log('this', this);
+            this.name = name;
+            this.age = age;
+        }
+
+        let p = objectFactory(Person, 'zaaz', 12);
+        console.log(p);
+
+        function myNew(fn, ...args) {
+            const obj = Object.create(fn.prototype);
+            const res = fn.call(obj, ...args);
+            if (res && (typeof res === 'object' || typeof res === 'function')) {
+                return res;
+            }
+            return obj;
+        }
+
+        let p3 = myNew(Person, "zhangsan", 123);
+        console.log(p3);
+    </script>
+</body>
+
+</html>

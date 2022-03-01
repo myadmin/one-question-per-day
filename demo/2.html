@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节流</title>
+</head>
+
+<body>
+    <script>
+        // 函数节流：每隔一段时间，只执行一次函数
+        function throttle(fn, delay) {
+            let timer;
+            return function () {
+                let _this = this;
+                let args = arguments;
+                if (timer) {
+                    return;
+                }
+                timer = setTimeout(function () {
+                    fn.apply(_this, args);
+                    timer = null;
+                }, delay);
+            }
+        }
+
+        function throttleTime(fn, delay) {
+            let previous = 0;
+            return function () {
+                let _this = this;
+                let args = arguments;
+                let now = new Date();
+                if (now - previous > delay) {
+                    fn.apply(_this, args);
+                    previous = now;
+                }
+            }
+        }
+
+        function testThrottle(e, content) {
+            console.log(e, content);
+        }
+        const testThrottleFn = throttleTime(testThrottle, 1000);
+
+        document.onmousemove = function (e) {
+            // console.log('e', e);
+            testThrottleFn(e, 'throttle');
+        }
+    </script>
+</body>
+
+</html>
